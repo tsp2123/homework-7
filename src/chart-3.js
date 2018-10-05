@@ -28,7 +28,6 @@ Promise.all([
   d3.csv(require('./middle-class-income-usa.csv'))
 ]).then(ready)
 
-
 // Create your ready function
 function ready(datapoints) {
   // Group based on country names
@@ -39,13 +38,13 @@ function ready(datapoints) {
     .nest()
     .key(d => d.country)
     .entries(datapointsWorld)
-  
+
   container
-  	.selectAll('.middleIncome')
-  	.data(nested)
-  	.enter()
-  	.append('svg')
-  	.attr('class', 'middleIncome')
+    .selectAll('.middleIncome')
+    .data(nested)
+    .enter()
+    .append('svg')
+    .attr('class', 'middleIncome')
     .attr('height', height + margin.top + margin.bottom)
     .attr('width', width + margin.left + margin.right)
     .append('g')
@@ -53,25 +52,24 @@ function ready(datapoints) {
     .each(function(d) {
       var svg = d3.select(this)
       var datapoints = d.values
-// first line for dataPointsWorld
-   svg
-     .append('path')
-     .datum(datapoints)
-     .attr('d', line)
-     .attr('stroke-width', 2)
-     .attr('stroke', '#77314d')
-     .attr('fill', 'none')
+      // first line for dataPointsWorld
+      svg
+        .append('path')
+        .datum(datapoints)
+        .attr('d', line)
+        .attr('stroke-width', 2)
+        .attr('stroke', '#77314d')
+        .attr('fill', 'none')
 
+      svg
+        .append('path')
+        .datum(datapointsUSA)
+        .attr('d', line)
+        .attr('stroke-width', 2)
+        .attr('stroke', '#808080')
+        .attr('fill', 'none')
 
-    svg
-      .append('path')
-      .datum(datapointsUSA)
-      .attr('d', line)
-      .attr('stroke-width', 2)
-      .attr('stroke', '#808080')
-      .attr('fill', 'none')
-
-// add axis labels
+      // add axis labels
 
       var xAxis = d3
         .axisBottom(xPositionScale)
@@ -94,8 +92,6 @@ function ready(datapoints) {
         .attr('class', 'axis y-axis')
         .call(yAxis.tickValues([5000, 10000, 15000, 20000]))
 
-
-
       svg
         .append('text')
         .text('USA')
@@ -106,17 +102,17 @@ function ready(datapoints) {
         .attr('text-anchor', 'middle')
         .attr('dy', -10)
 
-       svg
+      svg
         .append('text')
         .text(d.key)
-        .attr('x',width / 2)
+        .attr('x', width / 2)
         .attr('y', yPositionScale(10200))
         .attr('fill', '#77314d')
         .attr('font-size', 10)
         .attr('font-weight', 'bold')
         .attr('text-anchor', 'middle')
-        .attr('dy', -10)   
-
+        .attr('dy', -10)
     })
-
 }
+
+export { xPositionScale, yPositionScale, width, height, line }

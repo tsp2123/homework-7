@@ -19,7 +19,7 @@ var svg = d3
 
 // Create a time parser (see hints)
 
-var parser = d3.timeParse('%B-%y')
+var parseTime = d3.timeParse('%B-%y')
 
 // Create your scales
 
@@ -42,7 +42,10 @@ var colorScale = d3
     '#fb8072',
     '#80b1d3',
     '#fdb462',
-    '#b3de69'
+    '#b3de69',
+    '#008000',
+    '#00FFFF',
+    '#228B22'
   ])
 
 // Create a d3.line function that uses your scales
@@ -63,7 +66,7 @@ function ready(datapoints) {
   console.log('Data is', datapoints)
 
   datapoints.forEach(function(d) {
-    d.datetime = parser(d.month)
+    d.datetime = parseTime(d.month)
   })
 
   // Get a list of dates and a list of prices
@@ -105,7 +108,9 @@ function ready(datapoints) {
     .append('circle')
     .attr('class', 'end-circle')
     .attr('r', 5)
-    .attr('cx', width)
+    .attr('cx', function(d) {
+      return xPositionScale(d.values[0].datetime)
+    })
     .attr('cy', function(d) {
       return yPositionScale(d.values[0].price)
     })
@@ -126,10 +131,14 @@ function ready(datapoints) {
     })
 
     .attr('class', 'region-label')
-    .attr('x', width + 5)
-    .attr('y', function(d) {
-      return yPositionScale(d.values[0].price) + 4
+    .attr('x', function(d) {
+      return xPositionScale(d.values[0].datetime)
     })
+    .attr('y', function(d) {
+      return yPositionScale(d.values[0].price)
+    })
+    .attr('dx', 7)
+    .attr('dy', 10)
 
   // Add your title
   svg
@@ -140,8 +149,8 @@ function ready(datapoints) {
 
   // Add the shaded rectangle
 
-var december_16 = parser('December-16')
-var february_17 = parser('February-17')
+  var december_16 = parseTime('December-16')
+  var february_17 = parseTime('February-17')
 
   svg
     .selectAll('.winter-rect')
@@ -155,9 +164,8 @@ var february_17 = parser('February-17')
     .attr('y', yPositionScale(d3.max(prices)))
     .attr('x', xPositionScale(december_16))
     .attr('width', xPositionScale(february_17) - xPositionScale(december_16))
-    .attr('opacity', .10)
+    .attr('opacity', 0.1)
     .lower()
-
 
   // Add your axes
   var xAxis = d3.axisBottom(xPositionScale).tickFormat(d3.timeFormat('%b %y'))
@@ -172,7 +180,14 @@ var february_17 = parser('February-17')
     .append('g')
     .attr('class', 'axis y-axis')
     .call(yAxis)
-
 }
 
-export {xPositionScale, yPositionScale, width, height, colorScale, line, parser}
+export {
+  xPositionScale,
+  yPositionScale,
+  width,
+  height,
+  colorScale,
+  line,
+  parseTime
+}

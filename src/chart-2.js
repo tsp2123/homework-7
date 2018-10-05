@@ -6,7 +6,6 @@ var margin = { top: 40, left: 40, right: 0, bottom: 40 }
 var height = 130 - margin.top - margin.bottom
 var width = 100 - margin.left - margin.right
 
-
 // I'll give you the container
 var container = d3.select('#chart-2')
 
@@ -17,7 +16,7 @@ var xPositionScale = d3
   .range([0, width])
 var yPositionScale = d3
   .scaleLinear()
-  .domain([0, .3])
+  .domain([0, 0.3])
   .range([height, 0])
 // Create a d3.line function that uses your scales
 var area = d3
@@ -67,7 +66,7 @@ function ready(datapoints) {
         .attr('d', area)
         .attr('fill', '#86fcfd')
         .attr('opacity', 0.6)
-      
+
       area.y1(d => yPositionScale(d.ASFR_jp))
       svg
         .append('path')
@@ -85,7 +84,7 @@ function ready(datapoints) {
         .attr('font-size', 12)
         .attr('text-anchor', 'middle')
         .attr('dy', -10)
-      
+
       let datapoints = d.values
       let ASFR_jp = datapoints.map(d => +d.ASFR_jp)
       let ASFR_us = datapoints.map(d => +d.ASFR_us)
@@ -111,16 +110,13 @@ function ready(datapoints) {
         .attr('text-anchor', 'end')
         .attr('alignment-baseline', 'hanging')
 
-
-
-// axis labels
+      // axis labels
       var xAxis = d3.axisBottom(xPositionScale).tickValues([15, 30, 45])
       svg
         .append('g')
         .attr('class', 'axis x-axis')
         .attr('transform', `translate(0, ${height})`)
-        .call(xAxis)    
-
+        .call(xAxis)
 
       var yAxis = d3.axisLeft(yPositionScale).ticks(3)
       svg
@@ -128,20 +124,7 @@ function ready(datapoints) {
         .attr('class', 'axis y-axis')
         .call(yAxis)
 
-// text labels
-      svg
-        .append('text')
-        .text('USA')
-        .attr('x', xPositionScale(1985))
-        .attr('y', yPositionScale(16000))
-        .attr('fill', '#808080')
-        .attr('font-size', 10)
-        .attr('text-anchor', 'middle')
-        .attr('dy', -10)    
-
-
     })
-
-
 }
 
+export { xPositionScale, yPositionScale, width, height, area }
